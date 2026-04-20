@@ -1,4 +1,4 @@
-# 💧 Leak Detection Dashboard
+# Leak Detection Dashboard
 
 > **Real-time water anomaly detection & intelligent building analytics**
 
@@ -8,34 +8,34 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
-A cutting-edge water analytics platform that **simulates building-level consumption patterns** and detects critical water system anomalies in real-time. Using advanced ML-driven heuristics and statistical analysis, it identifies:
+A cutting-edge water analytics platform that **simulates building-level consumption patterns** and detects critical water system anomalies in real-time. Using advanced ML-driven heuristics and statistical analysis, it identifies three key anomaly types:
 
-| 🚨 Anomaly Type    | 📊 Detection Method                             |
-| ------------------ | ----------------------------------------------- |
-| **Leak**           | Sustained baseline elevation during night hours |
-| **Burst**          | Extreme consumption spikes (>98.5th percentile) |
-| **ScheduleChange** | Long-term consumption pattern shifts            |
+| Anomaly Type       | Detection Method                          |
+| ------------------ | ----------------------------------------- |
+| **Leak**           | Sustained baseline elevation during night |
+| **Burst**          | Extreme consumption spikes (>98.5th %ile) |
+| **ScheduleChange** | Long-term consumption pattern shifts      |
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-🎨 **Interactive Streamlit Dashboard**
+**Interactive Streamlit Dashboard**
 
 - Multi-building real-time simulation & monitoring
 - Visual anomaly detection with consumption graphs
 - Live anomaly score tracking
 
-📈 **Advanced Analytics Pipeline**
+**Advanced Analytics Pipeline**
 
 - Synthetic event generation from historical patterns
 - Temporal time-series modeling with minute-level granularity
 - Rule-based anomaly detection with confidence scoring
 - Comprehensive metrics: Confusion matrix, Accuracy, Per-class Recall
 
-🔧 **Flexible Execution**
+**Flexible Execution**
 
 - Web-based dashboard mode
 - CLI backend pipeline
@@ -43,28 +43,49 @@ A cutting-edge water analytics platform that **simulates building-level consumpt
 
 ---
 
-## 🏗️ Project Architecture
+## System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    EXECUTION MODES                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  app.py (Streamlit Web UI)    main.py (CLI Backend)        │
+│         │                              │                    │
+│         └──────────────┬───────────────┘                   │
+│                        │                                    │
+│                   core.py (Analytics)                       │
+│                        │                                    │
+│    ┌───────────────────┼────────────────────┐              │
+│    │                   │                    │              │
+│   Data              Events              Detection          │
+│  Loading          Processing          & Metrics            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Project Files**
 
 ```
 water-analytics-minopr/
-├── 📊 app.py              → Streamlit UI & interactive simulation
-├── ⚙️ core.py             → ML pipeline & analytics engine
-├── 🖥️ main.py             → CLI backend executor
-├── 📁 outputs/            → Generated metrics & artifacts
-└── 📋 README.md           → This file
+├── app.py          → Streamlit UI & interactive simulation
+├── core.py         → ML pipeline & analytics engine
+├── main.py         → CLI backend executor
+├── outputs/        → Generated metrics & artifacts
+└── README.md       → This documentation
 ```
 
-### Core Components
+**Core Components**
 
-| File                   | Purpose                                          |
-| ---------------------- | ------------------------------------------------ |
-| **[app.py](app.py)**   | Streamlit dashboard with real-time visualization |
-| **[core.py](core.py)** | Data pipeline, ML models, anomaly detection      |
-| **[main.py](main.py)** | Headless pipeline execution                      |
+| File    | Purpose                                  |
+| ------- | ---------------------------------------- |
+| app.py  | Streamlit dashboard with visualization   |
+| core.py | Data pipeline, models, anomaly detection |
+| main.py | Headless pipeline execution              |
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -101,37 +122,55 @@ python main.py
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Control Panel Parameters
 
-| Parameter                 | Range      | Default | Effect                   |
-| ------------------------- | ---------- | ------- | ------------------------ |
-| **Seed**                  | Any        | 42      | Reproducibility          |
-| **Detection Sensitivity** | 1.0 - 10.0 | 3.5     | Anomaly threshold tuning |
-| **Number of Buildings**   | 1 - 10     | 5       | Simulation scale         |
-| **Duration (days)**       | 3 - 14     | 7       | Time window              |
+| Parameter             | Range      | Default | Effect                   |
+| --------------------- | ---------- | ------- | ------------------------ |
+| Seed                  | Any        | 42      | Reproducibility          |
+| Detection Sensitivity | 1.0 - 10.0 | 3.5     | Anomaly threshold tuning |
+| Number of Buildings   | 1 - 10     | 5       | Simulation scale         |
+| Duration (days)       | 3 - 14     | 7       | Time window              |
 
 ---
 
-## 📊 Data Pipeline
+## Data Processing Pipeline
 
 ```
-Raw Data (CSV)
-    ↓
-Event Detection (threshold-based)
-    ↓
-Pattern Modeling (hourly distribution)
-    ↓
-Synthetic Generation (per-building)
-    ↓
-Time-series Aggregation (15-min buckets)
-    ↓
-Anomaly Injection (leak, burst, schedule changes)
-    ↓
-Detection & Scoring
-    ↓
-Metrics Evaluation (confusion matrix, recall)
+┌──────────────────────────────────────────────────────────────┐
+│                    INPUT SOURCES                             │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│     CSV Files (WEUSEDTO/)          Auto-generated           │
+│            │                         Synthetic Data          │
+│            └──────────────┬───────────────┘                 │
+│                           │                                  │
+│                    LOAD DATA MODULE                          │
+│                           │                                  │
+├──────────────────────────────────────────────────────────────┤
+│  EVENT DETECTION    PATTERN MODELING    SYNTHETIC GEN        │
+│  (Threshold)    →   (Hourly Dist)   →  (Per-building)      │
+│                                                              │
+├──────────────────────────────────────────────────────────────┤
+│                  TIME-SERIES AGGREGATION                    │
+│              (15-minute bucket resampling)                   │
+│                           │                                  │
+│                   ANOMALY INJECTION                          │
+│  ┌──────────────┬────────────────┬──────────────┐           │
+│  │              │                │              │            │
+│  ▼              ▼                ▼              ▼            │
+│ Leak       ScheduleChange      Burst       Baseline         │
+│                                                              │
+├──────────────────────────────────────────────────────────────┤
+│                 DETECTION & SCORING                          │
+│  Rule-based classification with anomaly scores              │
+│                                                              │
+├──────────────────────────────────────────────────────────────┤
+│            METRICS & PERFORMANCE EVALUATION                  │
+│  Confusion Matrix | Accuracy | Per-class Recall             │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Data Sources
@@ -141,34 +180,107 @@ Metrics Evaluation (confusion matrix, recall)
 
 ---
 
-## 📈 Model Performance
+## Anomaly Detection Logic
 
-The system generates performance metrics including:
-
-✅ **Accuracy** - Overall prediction correctness  
-✅ **Confusion Matrix** - Per-class breakdown  
-✅ **Recall** - Detection rate per anomaly type
+```
+Input: Consumption Timeseries
+         │
+         ├─────────────────────────────────────┐
+         │                                     │
+    [Step 1]                             [Step 2]
+  Calculate Baseline              Detect Anomaly Type
+  (per 15-min slot)                       │
+         │                                 │
+         ├──────────────┬──────────────┬───┴────┐
+         │              │              │        │
+         ▼              ▼              ▼        ▼
+    Residual        Schedule       Leak     Burst
+    (actual - baseline)   Change   (night)  (extreme)
+         │              │           │        │
+         │         [Day 3+]      [01-04h]  [>98.5%ile]
+         │         [↑ 1.05x]     [score>0.3]
+         │              │           │        │
+         └──────────────┴───────────┴────────┘
+                        │
+                    [PREDICTION]
+                    (Normal/Leak/Burst/
+                     ScheduleChange)
+```
 
 ---
 
-## 🎮 Dashboard Features
-
-### Real-Time Metrics
-
-- **Model Accuracy** - Current model performance
-- **Active Buildings** - Number of monitored sites
-- **Data Points** - Total samples processed
-
-### Interactive Views
-
-- 🔍 Per-building consumption trends
-- 📍 Anomaly alert highlighting
-- 📉 Anomaly score visualization
-- 🎯 Detailed performance reports
+## Model Performance Metrics
 
 ---
 
-## 🔐 Repository & Deployment
+## Dashboard Features
+
+**Real-Time Metrics**
+
+- Model Accuracy - Current model performance
+- Active Buildings - Number of monitored sites
+- Data Points - Total samples processed
+
+**Interactive Views**
+
+- Per-building consumption trends
+- Anomaly alert highlighting
+- Anomaly score visualization
+- Detailed performance reports
+
+---
+
+## Execution Workflow
+
+```
+┌─────────────────────────┐
+│   Select Execution      │
+│       Mode              │
+└────────────┬────────────┘
+             │
+    ┌────────┴────────┐
+    │                 │
+    ▼                 ▼
+[Web Dashboard]   [CLI Backend]
+ (app.py)          (main.py)
+    │                 │
+    ├────────┬────────┤
+    │        │        │
+    ▼        ▼        ▼
+ Set Seed  Load Data  Build Model
+    │        │        │
+    └────────┼────────┘
+             │
+      ┌──────┴──────────────┐
+      │                     │
+  For each Building    Simulate Events
+      │                (per day)
+      ▼                     │
+ Generate Events ◄──────────┘
+      │
+      ▼
+ Build Timeseries
+      │
+      ▼
+ Inject Anomalies
+      │
+      ▼
+ Detect Anomalies
+      │
+      ▼
+ Calculate Metrics
+      │
+    ┌─┴──────────────┐
+    │                │
+    ▼                ▼
+ Display UI     Print Results
+```
+
+---
+
+## Repository & Deployment
+
+**Live Repository**: [gouravkumarl/Leak_Detection_Dashboard](https://github.com/gouravkumarl/Leak_Detection_Dashboard)
 
 ```bash
 # Check remote
@@ -178,31 +290,29 @@ git remote -v
 git push origin master
 ```
 
-**Live Repository**: [gouravkumarl/Leak_Detection_Dashboard](https://github.com/gouravkumarl/Leak_Detection_Dashboard)
+---
+
+## Tech Stack
+
+| Technology | Purpose                         |
+| ---------- | ------------------------------- |
+| Streamlit  | Interactive web dashboard       |
+| Pandas     | Data manipulation & aggregation |
+| NumPy      | Numerical computing & stats     |
+| Matplotlib | Time-series visualization       |
 
 ---
 
-## 📝 Notes
+## Configuration Notes
 
-- Virtual environment (`venv/`) and cache (`__pycache__/`) are excluded via `.gitignore`
+- Virtual environment (`venv/`) and cache (`__pycache__/`) excluded via `.gitignore`
 - Output artifacts saved to `outputs/run/`
 - All timestamps in UTC ISO 8601 format
 - Fully reproducible with seed control
 
 ---
 
-## 💡 Tech Stack
-
-| Technology     | Purpose                          |
-| -------------- | -------------------------------- |
-| **Streamlit**  | Interactive web dashboard        |
-| **Pandas**     | Data manipulation & aggregation  |
-| **NumPy**      | Numerical computing & statistics |
-| **Matplotlib** | Time-series visualization        |
-
----
-
-## 📧 Contact & Support
+## Support
 
 For issues, feature requests, or improvements, visit the [GitHub repository](https://github.com/gouravkumarl/Leak_Detection_Dashboard).
 
@@ -210,7 +320,7 @@ For issues, feature requests, or improvements, visit the [GitHub repository](htt
 
 <div align="center">
 
-**Built with ❤️ for water system intelligence**
+Built for water system intelligence
 
 ![Last Updated](https://img.shields.io/badge/Last%20Updated-April%202026-blue?style=flat-square)
 
