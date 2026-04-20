@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+
+# Tooling/cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local outputs
+outputs/
